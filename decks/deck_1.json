@@ -1,0 +1,88 @@
+{
+  "deck": [
+    {
+      "name": "Dragonic Overlord",
+      "grade": 3,
+      "count": 2
+    },
+    {
+      "name": "Dragon Monk, Goku",
+      "grade": 3,
+      "count": 1
+    },
+    {
+      "name": "Demonic Dragon Berserker, Yaksha",
+      "grade": 3,
+      "count": 4
+    },
+    {
+      "name": "Dragon Knight, Nehalem",
+      "grade": 2,
+      "count": 4
+    },
+    {
+      "name": "Berserk Dragon",
+      "grade": 2,
+      "count": 4
+    },
+    {
+      "name": "Wyvern Strike, Tejas",
+      "grade": 2,
+      "count": 4
+    },
+    {
+      "name": "Embodiment of Armor, Bahr",
+      "grade": 1,
+      "count": 4
+    },
+    {
+      "name": "Dragon Monk, Gojo",
+      "grade": 1,
+      "count": 2
+    },
+    {
+      "name": "Flame of Hope, Aermo",
+      "grade": 1,
+      "count": 4
+    },
+    {
+      "name": "Demonic Dragon Madonna, Joka",
+      "grade": 1,
+      "count": 2
+    },
+    {
+      "name": "Wyvern Strike, Jarran",
+      "grade": 1,
+      "count": 2
+    },
+    {
+      "name": "Lizard Runner, Undeux",
+      "grade": 0,
+      "count": 1
+    },
+    {
+      "name": "Dragon Dancer, Monica",
+      "grade": 0,
+      "type": "Draw Trigger",
+      "count": 4
+    },
+    {
+      "name": "Lizard Soldier, Ganlu",
+      "grade": 0,
+      "type": "Stand Trigger",
+      "count": 4
+    },
+    {
+      "name": "Dragon Monk, Genjo",
+      "grade": 0,
+      "type": "Heal Trigger",
+      "count": 4
+    },
+    {
+      "name": "Demonic Dragon Mage, Rakshasa",
+      "grade": 0,
+      "type": "Critical Trigger",
+      "count": 4
+    }
+  ]
+}

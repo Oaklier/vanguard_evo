@@ -1,0 +1,88 @@
+{
+  "deck": [
+    {
+      "name": "Crimson Butterfly, Brigitte",
+      "grade": 3,
+      "count": 4
+    },
+    {
+      "name": "Knight of Conviction, Bors",
+      "grade": 3,
+      "count": 1
+    },
+    {
+      "name": "Solitary Knight, Gancelot",
+      "grade": 3,
+      "count": 2
+    },
+    {
+      "name": "Knight of Silence, Gallatin",
+      "grade": 2,
+      "count": 4
+    },
+    {
+      "name": "Blaster Blade",
+      "grade": 2,
+      "count": 1
+    },
+    {
+      "name": "Knight of the Harp, Tristan",
+      "grade": 2,
+      "count": 3
+    },
+    {
+      "name": "Covenant Knight, Randolf",
+      "grade": 2,
+      "count": 4
+    },
+    {
+      "name": "Little Sage, Marron",
+      "grade": 1,
+      "count": 4
+    },
+    {
+      "name": "Wingal",
+      "grade": 1,
+      "count": 2
+    },
+    {
+      "name": "Starlight Unicorn",
+      "grade": 1,
+      "count": 4
+    },
+    {
+      "name": "Knight of Rose, Morgana",
+      "grade": 1,
+      "count": 4
+    },
+    {
+      "name": "Stardust Trumpeter",
+      "grade": 0,
+      "count": 1
+    },
+    {
+      "name": "Bringer of Good Luck, Epona",
+      "grade": 0,
+      "type": "Critical Trigger",
+      "count": 4
+    },
+    {
+      "name": "Yggdrasil Maiden, Elaine",
+      "grade": 0,
+      "type": "Heal Trigger",
+      "count": 4
+    },
+    {
+      "name": "Weapons Dealer, Govannon",
+      "grade": 0,
+      "type": "Draw Trigger",
+      "count": 4
+    },
+    {
+      "name": "Flogal",
+      "grade": 0,
+      "type": "Stand Trigger",
+      "count": 4
+    }
+  ]
+}

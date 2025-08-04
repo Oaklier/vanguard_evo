@@ -1,181 +1,45 @@
 from player import Player
+import json
 
-deck = [
- [
-    # Grade 3 (2 cards)
-    'Dragonic Overlord',
-    'Dragonic Overlord',
-    
-    # Grade 3 (1 card)
-    'Dragon Monk, Goku',
-    
-    # Grade 3 (4 cards)
-    'Demonic Dragon Berserker, Yaksha',
-    'Demonic Dragon Berserker, Yaksha',
-    'Demonic Dragon Berserker, Yaksha',
-    'Demonic Dragon Berserker, Yaksha',
-    
-    # Grade 2 (4 cards)
-    'Dragon Knight, Nehalem',
-    'Dragon Knight, Nehalem',
-    'Dragon Knight, Nehalem',
-    'Dragon Knight, Nehalem',
-    
-    # Grade 2 (4 cards)
-    'Berserk Dragon',
-    'Berserk Dragon',
-    'Berserk Dragon',
-    'Berserk Dragon',
-    
-    # Grade 2 (4 cards)
-    'Wyvern Strike, Tejas',
-    'Wyvern Strike, Tejas',
-    'Wyvern Strike, Tejas',
-    'Wyvern Strike, Tejas',
-    
-    # Grade 1 (4 cards)
-    'Embodiment of Armor, Bahr',
-    'Embodiment of Armor, Bahr',
-    'Embodiment of Armor, Bahr',
-    'Embodiment of Armor, Bahr',
-    
-    # Grade 1 (2 cards)
-    'Dragon Monk, Gojo',
-    'Dragon Monk, Gojo',
-    
-    # Grade 1 (4 cards)
-    'Flame of Hope, Aermo',
-    'Flame of Hope, Aermo',
-    'Flame of Hope, Aermo',
-    'Flame of Hope, Aermo',
-    
-    # Grade 1 (2 cards)
-    'Demonic Dragon Madonna, Joka',
-    'Demonic Dragon Madonna, Joka',
-    
-    # Grade 1 (2 cards)
-    'Wyvern Strike, Jarran',
-    'Wyvern Strike, Jarran',
-    
-    # Grade 0 (1 card)
-    'Lizard Runner, Undeux',
-    
-    # Grade 0 - Draw Trigger (4 cards)
-    'Dragon Dancer, Monica',
-    'Dragon Dancer, Monica',
-    'Dragon Dancer, Monica',
-    'Dragon Dancer, Monica',
-    
-    # Grade 0 - Stand Trigger (4 cards)
-    'Lizard Soldier, Ganlu',
-    'Lizard Soldier, Ganlu',
-    'Lizard Soldier, Ganlu',
-    'Lizard Soldier, Ganlu',
-    
-    # Grade 0 - Heal Trigger (4 cards)
-    'Dragon Monk, Genjo',
-    'Dragon Monk, Genjo',
-    'Dragon Monk, Genjo',
-    'Dragon Monk, Genjo',
-    
-    # Grade 0 - Critical Trigger (4 cards)
-    'Demonic Dragon Mage, Rakshasa',
-    'Demonic Dragon Mage, Rakshasa',
-    'Demonic Dragon Mage, Rakshasa',
-    'Demonic Dragon Mage, Rakshasa',
-],
+def load_deck_data(filename):
+    """
+    Loads card data and returns a dictionary for efficient lookup
+    of card properties by name.
+    """
+    deck_array = []
 
-[
-    # Grade 3 (4 cards)
-    'Crimson Butterfly, Brigitte',
-    'Crimson Butterfly, Brigitte',
-    'Crimson Butterfly, Brigitte',
-    'Crimson Butterfly, Brigitte',
-    
-    # Grade 3 (1 card)
-    'Knight of Conviction, Bors',
-    
-    # # Grade 3 (2 cards)
-    'Solitary Knight, Gancelot',
-    # 'Solitary Knight, Gancelot',
-    
-    # Grade 2 (4 cards)
-    'Knight of Silence, Gallatin',
-    'Knight of Silence, Gallatin',
-    'Knight of Silence, Gallatin',
-    'Knight of Silence, Gallatin',
-    
-    # Grade 2 (1 card)
-    'Blaster Blade',
-    
-    # Grade 2 (3 cards)
-    'Knight of the Harp, Tristan',
-    'Knight of the Harp, Tristan',
-    'Knight of the Harp, Tristan',
-    
-    # Grade 2 (4 cards)
-    'Covenant Knight, Randolf',
-    'Covenant Knight, Randolf',
-    'Covenant Knight, Randolf',
-    'Covenant Knight, Randolf',
-    
-    # Grade 1 (4 cards)
-    'Little Sage, Marron',
-    'Little Sage, Marron',
-    'Little Sage, Marron',
-    'Little Sage, Marron',
-    
-    # Grade 1 (2 cards)
-    'Wingal',
-    'Wingal',
-    
-    # Grade 1 (4 cards)
-    'Starlight Unicorn',
-    'Starlight Unicorn',
-    'Starlight Unicorn',
-    'Starlight Unicorn',
-    
-    # Grade 1 (4 cards)
-    'Knight of Rose, Morgana',
-    'Knight of Rose, Morgana',
-    'Knight of Rose, Morgana',
-    'Knight of Rose, Morgana',
-    
-    # Grade 0 (1 card)
-    'Stardust Trumpeter',
-    
-    # Grade 0 - Critical Trigger (4 cards)
-    'Bringer of Good Luck, Epona',
-    'Bringer of Good Luck, Epona',
-    'Bringer of Good Luck, Epona',
-    'Bringer of Good Luck, Epona',
-    
-    # Grade 0 - Heal Trigger (4 cards)
-    'Yggdrasil Maiden, Elaine',
-    'Yggdrasil Maiden, Elaine',
-    'Yggdrasil Maiden, Elaine',
-    'Yggdrasil Maiden, Elaine',
-    
-    # Grade 0 - Draw Trigger (4 cards)
-    'Weapons Dealer, Govannon',
-    'Weapons Dealer, Govannon',
-    'Weapons Dealer, Govannon',
-    'Weapons Dealer, Govannon',
-    
-    # Grade 0 - Stand Trigger (4 cards)
-    'Flogal',
-    'Flogal',
-    'Flogal',
-    'Flogal',
+    try:
+        with open(filename, 'r') as file:
+            data = json.load(file)
+        card_lookup = {}
+        for card in data["deck"]:
+            card_name = card["name"]
+        
+            card_lookup[card_name] = {
+                "grade": card.get("grade"),
+                "count": card.get("count"),
+                "type": card.get("type", "Normal")
+            }
+         
+        for card in data["deck"]:
+            deck_array.extend([card["name"]] * card["count"])
 
-        ]
+        return card_lookup, deck_array
 
-]
+    except FileNotFoundError:
+        print(f"Error: The file '{filename}' was not found.")
+        return None
+    except json.JSONDecodeError:
+        print(f"Error: The file '{filename}' is not a valid JSON format.")
+        return None
+    
+deck_1, card_name1 = load_deck_data('./decks/deck_1.json')
+deck_2, card_name2 = load_deck_data('./decks/deck_2.json')
 
 class Game:
     def __init__(self):
-        self.player1 = Player("Player_1", deck[0])
-        self.player2 = Player("Player_2", deck[1])
+        self.player1 = Player("Player_1", card_name1)
+        self.player2 = Player("Player_2", card_name2)
         self.players = [self.player1, self.player2]
         self.current_player_index = 0
         self.game_running = True
