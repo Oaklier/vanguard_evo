@@ -9,6 +9,9 @@ class Player:
         self.vangaurd_circle = []    
         self.r1_circle = []
 
+    def card_count(self, item):
+        return len(item)
+
     def show_hand(self):
         if self.hand:
             print(self.hand)
