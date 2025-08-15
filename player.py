@@ -13,10 +13,7 @@ class Player:
         return len(item)
 
     def show_hand(self):
-        if self.hand:
-            print(self.hand)
-        else:
-            print("Hand is Empty")
+        return self.hand
 
     def draw_cards(self, num_cards = 1):
         drawn_cards = []

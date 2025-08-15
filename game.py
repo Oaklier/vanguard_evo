@@ -28,16 +28,6 @@ deck_2 = load_deck('./decks/deck_2.json')
 deck_1_craft = create_deck(deck_1)
 deck_2_craft = create_deck(deck_2)
 
-def coin_flip():
-    result = random.choice(["Heads", "Tails"])
-    print(f"The coin landed on: {result}")
-    
-    if result == "Heads":
-        result = 0
-    else:
-        result = 1
-    return result
-
 class Game:
     def __init__(self):
         self.player1 = Player("Player_1", deck_1_craft)
@@ -46,14 +36,23 @@ class Game:
         self.current_player_index = 0
         self.game_running = True
 
-    def _get_current_player(self):
+    def coin_flip(self):
+        result = random.choice(["Heads", "Tails"])
+        print(f"The coin landed on: {result}")
+    
+        if result == "Heads":
+            return self.player1
+        else:
+            return self.player2
+
+    def get_current_player(self):
         return self.players[self.current_player_index]
     
-    def _switch_player(self):
+    def switch_player(self):
         self.current_player_index = (self.current_player_index + 1) % len(self.players)
     
 
-    def _setup_game(self):
+    def setup_game(self):
         print("\n--- Game Setup Phase ---")
 
         for player in self.players:
@@ -86,40 +85,64 @@ class Game:
                         print("Invalid choice. Please enter a number within your hand's range.")
                 except ValueError:
                     print("Invalid input. Please enter a number.")
+        
+        print("\n--- Setup Completed ---")
     
-    def _handle_player_turn(self, player):
+    def handle_player_turn(self, player):
+
         print(f"\n--- It's {player.name}'s turn. ---")
+        print(f"\n--- {player.name} draw. ---")
+        player.draw_cards(1)
         user_input = ""
         while user_input != "e":
             if self.player1.is_defeated() or self.player2.is_defeated():
                 self.game_running = False
                 break 
+                
+            """Playmat"""
 
-            user_input = input("Pick a Move (d: draw, f: show field, e: end turn): ").lower()
-            
-            if user_input == "d":
-                player.draw_cards()
-            elif user_input == "f":
+            print(f"""
+            \t\t\t[]
+            \t\t\tcount:
+
+            \t\t[] \t[{player.vangaurd_circle}] \t[]
+            \t\tcount: v_count:{player.card_count(player.vangaurd_circle)} count: 
+
+            \t[]\t[] \t[] \t[]\t[]
+            count:\tcount: count: count: \tcount:
+
+            \t\t[] \t[] \t[]\t[]
+            \t\tcount: count: count: \tcount:
+
+            [{player.show_hand()}]
+            h_count: {player.card_count(player.show_hand())}
+            """)
+
+            user_input = input("Pick a Move (f: show field, e: end turn): ").lower()
+
+            if user_input == "f":
                 print( "Currently: ", player.vangaurd_circle)
             elif user_input == "e":
                 print(f"{player.name} ends their turn.")
             else:
                 print("Invalid input. Please try again.")
 
-
     def run_game(self):
-        print("Game Start")
+        print("Load Game")
         
-        self._setup_game() 
+        self.setup_game() 
+        
+        current_player = self.coin_flip()
+        self.handle_player_turn(current_player)
 
         while self.game_running:
-            current_player = self._get_current_player()
-            self._handle_player_turn(current_player)
+            current_player = self.get_current_player()
+            self.handle_player_turn(current_player)
 
             if not self.game_running:
                 break
 
-            self._switch_player() 
+            self.switch_player() 
 
         print("\n--- Game Over ---")
 
