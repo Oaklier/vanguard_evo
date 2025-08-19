@@ -2,40 +2,36 @@ from player import Player
 import json
 import random
 
-def create_deck(decklist):
-    """Expands a decklist with counts into a flat list of individual card objects."""
-    playable_deck = []
-    for card_info in decklist:
-        card_object = {key: value for key, value in card_info.items() if key != "count"}
-        
-        for _ in range(card_info["count"]):
-            playable_deck.append(card_object.copy())
-
-    return playable_deck
 
 def load_deck(filename):
     """Loads a decklist from a JSON file."""
     try:
         with open(filename, 'r') as f:
-            return json.load(f)["deck"]
+
+            """Expands a decklist with counts into a flat list of individual card objects."""
+            deck = []
+            for card_info in json.load(f)["deck"]:
+                card_object = {key: value for key, value in card_info.items() if key != "count"}
+                
+                for _ in range(card_info["count"]):
+                    deck.append(card_object.copy())
+
+            return deck
+        
     except FileNotFoundError:
         print(f"Error: The file '{filename}' was not found.")
         return None
     
-deck_1 = load_deck('./decks/deck_1.json')
-deck_2 = load_deck('./decks/deck_2.json')
-
-deck_1_craft = create_deck(deck_1)
-deck_2_craft = create_deck(deck_2)
-
 class Game:
     def __init__(self):
-        self.player1 = Player("Player_1", deck_1_craft)
-        self.player2 = Player("Player_2", deck_2_craft)
+        deck_1 = load_deck('./decks/deck_1.json')
+        deck_2 = load_deck('./decks/deck_2.json')
+        self.player1 = Player("Player_1", deck_1)
+        self.player2 = Player("Player_2", deck_2)
         self.players = [self.player1, self.player2]
         self.current_player_index = 0
         self.game_running = True
-
+    
     def coin_flip(self):
         result = random.choice(["Heads", "Tails"])
         print(f"The coin landed on: {result}")
@@ -44,7 +40,7 @@ class Game:
             return self.player1
         else:
             return self.player2
-
+    
     def get_current_player(self):
         return self.players[self.current_player_index]
     
@@ -71,7 +67,7 @@ class Game:
 
                         player.deck.remove(selected_card)
                         
-                        player.vangaurd_circle.append(selected_card)
+                        player.v_circle.append(selected_card)
                         
                         print(f"{player.name} rides with {selected_card['name']}!")
 
@@ -88,6 +84,9 @@ class Game:
         
         print("\n--- Setup Completed ---")
     
+    def condition_to_end(self):
+        pass
+
     def handle_player_turn(self, player):
 
         print(f"\n--- It's {player.name}'s turn. ---")
@@ -98,15 +97,15 @@ class Game:
             if self.player1.is_defeated() or self.player2.is_defeated():
                 self.game_running = False
                 break 
-                
+            
             """Playmat"""
 
             print(f"""
             \t\t\t[]
             \t\t\tcount:
 
-            \t\t[] \t[{player.vangaurd_circle}] \t[]
-            \t\tcount: v_count:{player.card_count(player.vangaurd_circle)} count: 
+            \t\t[] \t[{player.get_card_info("name", player.v_circle)}] \t[]
+            \t\tcount: v_count:{player.card_count(player.v_circle)} count: 
 
             \t[]\t[] \t[] \t[]\t[]
             count:\tcount: count: count: \tcount:
@@ -118,12 +117,121 @@ class Game:
             h_count: {player.card_count(player.show_hand())}
             """)
 
-            user_input = input("Pick a Move (f: show field, e: end turn): ").lower()
+            user_input = input("Pick a Move (p: place card, e: end turn): ").lower()
 
-            if user_input == "f":
-                print( "Currently: ", player.vangaurd_circle)
+            if user_input == "p":
+                """First do a check on the current grade"""
+                player_current_grade = player.get_current_grade()
+
+                if player.is_upgraded == False:
+                    if player_current_grade == 0: 
+                        card_option = [card for card in player.hand if card["grade"] == 1 or card["grade"] == 0]
+                        try:
+                            print("Here are the options: ", card_option)
+                            choice_index = int(input(f"{player.name}, choose a card to ride (0-{len(card_option)-1}): "))
+                            if 0 <= choice_index < len(card_option):
+
+                                selected_card = card_option[choice_index]
+                                
+                                if selected_card["grade"] == 1:
+                                    print("Grade 1")
+                                    player.v_circle.append(selected_card)
+                                    player.hand.remove(selected_card)
+                                    print(f"{player.name} rides with {selected_card['name']}! on the Vangaurd Circle")       
+                                    player.grade_upgrade()  
+                                    player.is_upgraded = True
+                                else:
+                                    print("Grade 0")
+
+                            else:
+                                print("Invalid choice. Please enter a number within your hand's range.")
+                        except ValueError:
+                            print("Invalid input. Please enter a number.")
+                    
+                    elif player_current_grade == 1: 
+                        card_option = [card for card in player.hand if card["grade"] == 2 or card["grade"] == 1]
+                        try:
+                            print("Here are the options: ", card_option)
+                            choice_index = int(input(f"{player.name}, choose a card to ride (0-{len(card_option)-1}): "))
+                            if 0 <= choice_index < len(card_option):
+
+                                selected_card = card_option[choice_index]
+                                
+                                if selected_card["grade"] == 2:
+                                    print("Grade 2")
+                                    player.v_circle.append(selected_card)
+                                    player.hand.remove(selected_card)
+                                    print(f"{player.name} rides with {selected_card['name']}! on the Vangaurd Circle")       
+                                    player.grade_upgrade()  
+                                    player.is_upgraded = True
+                                    print("Whats up man: ", player.is_upgraded)
+
+                                else:
+                                    print("Grade 1")
+                    
+                            else:
+                                print("Invalid choice. Please enter a number within your hand's range.")
+                        except ValueError:
+                            print("Invalid input. Please enter a number.")
+
+                    elif player_current_grade == 2: 
+                        card_option = [card for card in player.hand if card["grade"] == 3 or card["grade"] == 2]
+                        try:
+                            print("Here are the options: ", card_option)
+                            choice_index = int(input(f"{player.name}, choose a card to ride (0-{len(card_option)-1}): "))
+                            if 0 <= choice_index < len(card_option):
+
+                                selected_card = card_option[choice_index]
+                                
+                                if selected_card["grade"] == 3:
+                                    print("Grade 3")
+                                    player.v_circle.append(selected_card)
+                                    player.hand.remove(selected_card)
+                                    print(f"{player.name} rides with {selected_card['name']}! on the Vangaurd Circle")       
+                                    player.grade_upgrade()  
+                                    player.is_upgraded = True
+                                    print("Whats up man: ", player.is_upgraded)
+
+                                else:
+                                    print("Grade 2")
+                    
+                            else:
+                                print("Invalid choice. Please enter a number within your hand's range.")
+                        except ValueError:
+                            print("Invalid input. Please enter a number.")
+
+                    elif player_current_grade == 3: 
+                        card_option = [card for card in player.hand if card["grade"] == 3 or card["grade"] == 2]
+                        try:
+                            print("Here are the options: ", card_option)
+                            choice_index = int(input(f"{player.name}, choose a card to ride (0-{len(card_option)-1}): "))
+                            if 0 <= choice_index < len(card_option):
+
+                                selected_card = card_option[choice_index]
+                                
+                                if selected_card["grade"] == 3:
+                                    print("Grade 3")
+                                    player.v_circle.append(selected_card)
+                                    player.hand.remove(selected_card)
+                                    print(f"{player.name} rides with {selected_card['name']}! on the Vangaurd Circle")       
+                                    player.grade_upgrade()  
+                                    player.is_upgraded = True
+                                    print("Whats up man: ", player.is_upgraded)
+
+                                else:
+                                    print("Grade 2")
+                    
+                            else:
+                                print("Invalid choice. Please enter a number within your hand's range.")
+                        except ValueError:
+                            print("Invalid input. Please enter a number.")
+
+                elif player.is_upgraded == True:
+                    print("Cannot upgrade anymore wait for ur next turn")
+                
             elif user_input == "e":
                 print(f"{player.name} ends their turn.")
+                player.is_upgraded = False
             else:
                 print("Invalid input. Please try again.")
 

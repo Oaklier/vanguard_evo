@@ -6,11 +6,27 @@ class Player:
         self.damage_zone = []
         self.hand = []
         self.deck = deck
-        self.vangaurd_circle = []    
+        self.v_circle = []    
         self.r1_circle = []
+        self.r2_circle = []
+        self.r3_circle = []
+        self.r4_crircle = []
+        self.r5_circle = []
+        self.grade = 0
+        self.is_upgraded = False
 
     def card_count(self, item):
         return len(item)
+    
+    def get_current_grade(self): 
+        return self.grade
+    
+    def grade_upgrade(self):
+        self.grade += 1
+        print("Successfully Upgrade!!!")
+
+    def get_card_info(self, search, location):
+        return [card[search] for card in location]
 
     def show_hand(self):
         return self.hand
