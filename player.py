@@ -6,14 +6,16 @@ class Player:
         self.damage_zone = []
         self.hand = []
         self.deck = deck
+        self.drop_zone = []
         self.v_circle = []    
-        self.r1_circle = []
+        self.r1_circle = [{'name': 'Dragon Monk, Gojo', 'grade': 1}]
         self.r2_circle = []
         self.r3_circle = []
         self.r4_crircle = []
         self.r5_circle = []
         self.grade = 0
         self.is_upgraded = False
+        self.step = 0
 
     def card_count(self, item):
         return len(item)
