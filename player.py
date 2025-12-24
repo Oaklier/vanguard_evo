@@ -71,3 +71,20 @@ class Player:
     
     def is_defeated(self):
         return len(self.damage_zone) >= 6 or len(self.deck) <= 0
+    
+    def show_playmat(self):
+        """Playmat"""
+
+        print(f"""
+        \t\t\t[]
+        \t\t\tcount:
+
+        \t\t[{self.get_card_info("name", self.r1_circle)}] \t[{self.get_card_info("name", self.v_circle)}] \t[{self.get_card_info("name", self.r2_circle)}] \t[Deck]
+        \t\tcount:{self.card_count(self.r1_circle)}  \tv_count:{self.card_count(self.v_circle)} \tcount:{self.card_count(self.r2_circle)}  \tcount: {self.card_count(self.deck)}
+
+        \t[Damage Zone]\t[{self.get_card_info("name", self.r3_circle)}] \t[{self.get_card_info("name", self.r4_crircle)}] \t[{self.get_card_info("name", self.r5_circle)}]\t[Drop Zone]
+        count:{self.card_count(self.damage_zone)}\tcount:{self.card_count(self.r3_circle)} count:{self.card_count(self.r4_crircle)} count:{self.card_count(self.r5_circle)} \tcount:{self.card_count(self.drop_zone)}
+
+        [{self.show_hand()}]
+        h_count: {self.card_count(self.show_hand())}
+        """)
