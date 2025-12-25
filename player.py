@@ -7,15 +7,11 @@ class Player:
         self.hand = []
         self.deck = deck
         self.drop_zone = []
-        self.v_circle = []    
-        self.r1_circle = [{'name': 'Dragon Monk, Gojo', 'grade': 1}]
-        self.r2_circle = []
-        self.r3_circle = []
-        self.r4_crircle = []
-        self.r5_circle = []
         self.grade = 0
         self.is_upgraded = False
         self.step = 0
+        self.play_area = [[], [], [],
+                        [], [], [] ]
 
     def card_count(self, item):
         return len(item)
@@ -54,17 +50,6 @@ class Player:
         else:
             print(f"{self.name}'s field is empty.")
 
-    def play_card_to_field(self, card_index, circle):
-        if 0 <= card_index < len(self.deck):
-            card = self.deck.pop(card_index)
-            circle.append(card)
-            # self.vangaurd_circle.append(card)
-            print(f"{self.name} played {card} to the field.")
-            return card
-        else:
-            print("Invalid card index to play.")
-            return None
-
     def shuffle_cards(self, cards):
         shuffled_cards = random.shuffle(cards)
         return shuffled_cards 
@@ -76,14 +61,12 @@ class Player:
         """Playmat"""
 
         print(f"""
-        \t\t\t[]
-        \t\t\tcount:
 
-        \t\t[{self.get_card_info("name", self.r1_circle)}] \t[{self.get_card_info("name", self.v_circle)}] \t[{self.get_card_info("name", self.r2_circle)}] \t[Deck]
-        \t\tcount:{self.card_count(self.r1_circle)}  \tv_count:{self.card_count(self.v_circle)} \tcount:{self.card_count(self.r2_circle)}  \tcount: {self.card_count(self.deck)}
+        \t\t[{self.get_card_info("name", self.play_area[0])}] \t[{self.get_card_info("name", self.play_area[1])}] \t[{self.get_card_info("name", self.play_area[2])}] \t[Deck]
+        \t\tcount:{self.card_count(self.play_area[0])}  \tv_count:{self.card_count(self.play_area[1])} \tcount:{self.card_count(self.play_area[2])}  \tcount: {self.card_count(self.deck)}
 
-        \t[Damage Zone]\t[{self.get_card_info("name", self.r3_circle)}] \t[{self.get_card_info("name", self.r4_crircle)}] \t[{self.get_card_info("name", self.r5_circle)}]\t[Drop Zone]
-        count:{self.card_count(self.damage_zone)}\tcount:{self.card_count(self.r3_circle)} count:{self.card_count(self.r4_crircle)} count:{self.card_count(self.r5_circle)} \tcount:{self.card_count(self.drop_zone)}
+        \t[Damage Zone]\t[{self.get_card_info("name", self.play_area[3])}] \t[{self.get_card_info("name", self.play_area[4])}] \t[{self.get_card_info("name", self.play_area[5])}]\t[Drop Zone]
+        count:{self.card_count(self.damage_zone)}\tcount:{self.card_count(self.play_area[3])} count:{self.card_count(self.play_area[4])} count:{self.card_count(self.play_area[5])} \tcount:{self.card_count(self.drop_zone)}
 
         [{self.show_hand()}]
         h_count: {self.card_count(self.show_hand())}

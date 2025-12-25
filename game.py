@@ -2,7 +2,6 @@ from player import Player
 import json
 import random
 
-
 def load_deck(filename):
     """Loads a decklist from a JSON file."""
     try:
@@ -67,7 +66,7 @@ class Game:
 
                         player.deck.remove(selected_card)
                         
-                        player.v_circle.append(selected_card)
+                        player.play_area[1].append(selected_card)
                         
                         print(f"{player.name} rides with {selected_card['name']}!")
 
@@ -86,12 +85,11 @@ class Game:
     
     def handle_player_turn(self, player):
 
-        print(f"\n--- It's {player.name}'s turn. ---")
+        print(f"\nIt's {player.name}'s turn.")
 
         player.is_upgraded = False
         player.step += 1
 
-        print(f"\n--- It's {player.name}'s turn. ---")
         #PHASE
 
         user_input = ""
@@ -105,7 +103,7 @@ class Game:
     
             #Draw
             print(f"\n--- Draw Phase. ---")
-            print(f"\n--- {player.name} draw. ---")
+            print(f"\n{player.name} draw.")
             player.draw_cards(1)
             
             #Ride
@@ -138,7 +136,7 @@ class Game:
                         
                         confirmation = input(f"Would you like to ride {selected_card['name']}? (y/n) ").lower()
                         if confirmation == 'y':
-                            player.v_circle.append(selected_card)
+                            player.play_area[1].append(selected_card)
                             player.hand.remove(selected_card)
                             print(f"{player.name} rides with {selected_card['name']}!")
                             player.grade_upgrade()
@@ -157,11 +155,13 @@ class Game:
                 player.show_playmat()
                 user_input = input("Pick a Move (p: place card, m: move card, n: next phase): ").lower()
 
+                print("new playmat", player.play_area)
+
                 if user_input == "n":
                     break
                 
                 if user_input == "p":
-                    
+                    print(player.play_area)
                     player_current_grade = player.get_current_grade()
                     map_grade = {0: [1, 0], 1: [2, 1], 2: [3, 2], 3: [3, 2]}
 
@@ -176,78 +176,20 @@ class Game:
                                 if 0 <= choice_index < len(card_option):
                                     selected_card = card_option[choice_index]
                                     
-                                    position_index = str(input(f"{player.name}, choose a position to place the card: "))
-                            
-                                    if position_index == "r1":
-                                        if selected_card["grade"] <= player_current_grade:
-                                            
-                                            confirmation = input(f"Would you like to ride {selected_card['name']}? (y/n) ").lower()
-                                            if confirmation == 'y':
-                                                if player.r1_circle:
-                                                    discard = player.r1_circle.pop(0)
-                                                    player.drop_zone.append(discard)
-                                                player.r1_circle.append(selected_card)
-                                                player.hand.remove(selected_card)
-                                                print(f"{player.name} rides with {selected_card['name']}!")
-                                            else:
-                                                print("option invalid try again")
-                                                
-                                    elif position_index == "r2":
-                                        if selected_card["grade"] <= player_current_grade:
-                                            
-                                            confirmation = input(f"Would you like to ride {selected_card['name']}? (y/n) ").lower()
-                                            if confirmation == 'y':
-                                                if player.r2_circle:
-                                                    discard = player.r2_circle.pop(0)
-                                                    player.drop_zone.append(discard)
-                                                player.r2_circle.append(selected_card)
-                                                player.hand.remove(selected_card)
-                                                print(f"{player.name} rides with {selected_card['name']}!")
-                                            else:
-                                                print("option invalid try again")
+                                    position_index = int(input(f"{player.name}, choose a position to place the card: "))
 
-                                    elif position_index == "r3":
+                                    if position_index == 1:
+                                        print("Cant ride again")
+                                    else:
                                         if selected_card["grade"] <= player_current_grade:
-                                            
                                             confirmation = input(f"Would you like to ride {selected_card['name']}? (y/n) ").lower()
                                             if confirmation == 'y':
-                                                if player.r3_circle:
-                                                    discard = player.r3_circle.pop(0)
-                                                    player.drop_zone.append(discard)
-                                                player.r3_circle.append(selected_card)
+                                                # if player.play_area[position_index]:
+                                                #     discard = player.r1_circle.pop(0)
+                                                #     player.drop_zone.append(discard)
+                                                player.play_area[position_index].append(selected_card)
                                                 player.hand.remove(selected_card)
                                                 print(f"{player.name} rides with {selected_card['name']}!")
-                                            else:
-                                                print("option invalid try again")
-
-                                    elif position_index == "r4":
-                                        if selected_card["grade"] <= player_current_grade:
-                                            
-                                            confirmation = input(f"Would you like to ride {selected_card['name']}? (y/n) ").lower()
-                                            if confirmation == 'y':
-                                                if player.r4_circle:
-                                                    discard = player.r4_circle.pop(0)
-                                                    player.drop_zone.append(discard)
-                                                player.r4_circle.append(selected_card)
-                                                player.hand.remove(selected_card)
-                                                print(f"{player.name} rides with {selected_card['name']}!")
-                                            else:
-                                                print("option invalid try again")
-                                    
-                                    elif position_index == "r5":
-                                        if selected_card["grade"] <= player_current_grade:
-                                            
-                                            confirmation = input(f"Would you like to ride {selected_card['name']}? (y/n) ").lower()
-                                            if confirmation == 'y':
-                                                if player.r5_circle:
-                                                    discard = player.r5_circle.pop(0)
-                                                    player.drop_zone.append(discard)
-                                                player.r5_circle.append(selected_card)
-                                                player.hand.remove(selected_card)
-                                                print(f"{player.name} rides with {selected_card['name']}!")
-                                            else:
-                                                print("option invalid try again")
-
                                     break
                                 else:
                                     print("Invalid choice. Please enter a number within your hand's range.")
@@ -257,78 +199,23 @@ class Game:
                         print("Option empty")
 
                 if user_input == "m":
-                    position_index = str(input(f"{player.name}, choose a position to move the card: "))
+                    position_index = int(input(f"{player.name}, choose a position to move the card: "))
 
-                    if position_index == "r1" and player.r1_circle:
-                        if not player.r3_circle:
-                            move = player.r1_circle.pop(0)
-                            player.r3_circle.append(move)
+                    movement_map = {0: 3, 3: 0, 2:5, 5:2}
 
-                            print("card moved")
+                    if player.play_area[position_index]:
+                        if not player.play_area[movement_map[position_index]]:
+                            player.play_area[movement_map[position_index]].append(player.play_area[position_index].pop(0))
                         else:
-                            swap_back = player.r1_circle.pop(0)
-                            swap_front = player.r3_circle.pop(0)
+                            moving = player.play_area[position_index].pop(0)
+                            moving2 = player.play_area[movement_map[position_index]].pop(0)
 
-                            player.r1_circle.append(swap_front)
-                            player.r3_circle.append(swap_back)
-
-                            print("Card Swap")
-                    
+                            player.play_area[position_index].append(moving2)
+                            player.play_area[movement_map[position_index]].append(moving)
                     else:
-                        print("Nothing to see here")
+                        print("Slot empty there is nothing to move")
                     
-                    if position_index == "r3" and player.r3_circle:
-                        if not player.r1_circle:
-                            move = player.r3_circle.pop(0)
-                            player.r1_circle.append(move)
-
-                            print("card moved")
-                        else:
-                            swap_back = player.r1_circle.pop(0)
-                            swap_front = player.r3_circle.pop(0)
-
-                            player.r1_circle.append(swap_front)
-                            player.r3_circle.append(swap_back)
-
-                            print("Card Swap")
-                    else:
-                        print("Nothing to see here")
-
-
-                    if position_index == "r2" and player.r2_circle:
-                        if not player.r5_circle:
-                            move = player.r2_circle.pop(0)
-                            player.r5_circle.append(move)
-
-                            print("card moved")
-                        else:
-                            swap_back = player.r2_circle.pop(0)
-                            swap_front = player.r5_circle.pop(0)
-
-                            player.r2_circle.append(swap_front)
-                            player.r5_circle.append(swap_back)
-
-                            print("Card Swap")
-                    
-                    else:
-                        print("Nothing to see here")
-                    
-                    if position_index == "r5" and player.r5_circle:
-                        if not player.r2_circle:
-                            move = player.r5_circle.pop(0)
-                            player.r2_circle.append(move)
-
-                            print("card moved")
-                        else:
-                            swap_back = player.r2_circle.pop(0)
-                            swap_front = player.r5_circle.pop(0)
-
-                            player.r2_circle.append(swap_front)
-                            player.r5_circle.append(swap_back)
-
-                            print("Card Swap")
-                    else:
-                        print("Nothing to see here")
+                    print(player.play_area)
          
                 else:    
                     print("Select again something within the list")
