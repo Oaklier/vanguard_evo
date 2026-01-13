@@ -12,6 +12,8 @@ class Player:
         self.step = 0
         self.play_area = [[], [], [],
                         [], [], [] ]
+        self.card_active_tracker = [[] , [], []]
+        self.enemy_tracker = [[] , [], []]
 
     def card_count(self, item):
         return len(item)

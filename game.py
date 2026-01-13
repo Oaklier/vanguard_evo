@@ -1,6 +1,7 @@
 from player import Player
 import json
 import random
+import os
 
 def load_deck(filename):
     """Loads a decklist from a JSON file."""
@@ -83,6 +84,7 @@ class Game:
         
         print("\n--- Setup Completed ---")
     
+
     def handle_player_turn(self, player):
 
         print(f"\nIt's {player.name}'s turn.")
@@ -222,10 +224,62 @@ class Game:
 
                         
             player.show_playmat()
+            os.system('cls')
             break
 
-            #Battle
- 
+        #Battle        
+        while True:
+            
+            value = []
+            key = []
+
+            map_attack ={}
+            ##Current player who is attacking
+            for i in range(len(player.card_active_tracker)):
+                print(i)
+                if player.play_area[i]:
+                    player.card_active_tracker[i].append(i)
+
+            opponent = [p for p in self.players if p != player][0]
+    
+            print(f"It's {player.name}'s turn. Opponent is {opponent.name}")
+
+            
+            for n in range(len(opponent.card_active_tracker)):
+                print(n)
+                if opponent.play_area[n]:
+                    opponent.card_active_tracker[n].append(n)
+      
+            for n in opponent.card_active_tracker:
+                if n:
+                    value.append(opponent.card_active_tracker.index(n))
+            
+            for n in player.card_active_tracker:
+                if n:
+                    key.append(player.card_active_tracker.index(n))
+
+            for i in range(len(key)):
+                map_attack[key[i]] = value
+
+
+            print("Possible attack combo: ", map_attack)
+
+
+            position_index = int(input(f"{player.name}, choose a card to attack: "))    
+
+
+            print("Attack complete")
+        
+
+            break
+        print(player.card_active_tracker)
+        
+        print("Name: ", player.name)
+
+        print(opponent.card_active_tracker)
+        
+        print("Name opponent: ", opponent.name)
+
     def run_game(self):
         print("Load Game")  
         
