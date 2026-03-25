@@ -1,75 +1,54 @@
+from playmat import Playmat
 import random
 
 class Player:
     def __init__(self, name, deck):
         self.name = name
-        self.damage_zone = []
-        self.hand = []
-        self.deck = deck
-        self.drop_zone = []
-        self.grade = 0
-        self.is_upgraded = False
-        self.step = 0
-        self.play_area = [[], [], [],
-                        [], [], [] ]
-        self.card_active_tracker = [[] , [], []]
-        self.enemy_tracker = [[] , [], []]
+        self.deck = deck  
+        self.playmat = Playmat() 
 
-    def card_count(self, item):
-        return len(item)
+    def draw_cards(self, count):
+        for _ in range(count):
+            if self.deck.cards:
+                card = self.deck.cards.pop(0)
+                self.playmat.hand.append(card)
+
+        print(f"{self.name}'s drew {count} cards.")
     
-    def get_current_grade(self): 
-        return self.grade
-    
-    def grade_upgrade(self):
-        self.grade += 1
-        print("Successfully Upgrade!!!")
+    def shuffle_deck(self):
+        random.shuffle(self.deck.cards)
+        print(f"{self.name}'s deck shuffled.")
 
-    def get_card_info(self, search, location):
-        return [card[search] for card in location]
+    def ride_vanguard(self, card):
+        if self.playmat.zones["VC"]:
+            self.playmat.soul.append(self.playmat.zones["VC"])
+        
+        self.playmat.zones["VC"] = card
+        print(f"{self.name} Rides {card.name}!")
 
-    def show_hand(self):
-        return self.hand
+    def call_rear_guard(self, player, unit, zone_name, zone_map):
+            if player.playmat.zones[zone_name] == None:
+                player.playmat.zones[zone_name] = unit
+                print(f"Called {unit.name} to {zone_name}!")
 
-    def draw_cards(self, num_cards = 1):
-        drawn_cards = []
-
-        for _ in range(num_cards):
-            card = self.deck.pop(0)
-            if card:
-                self.hand.append(card)
-                drawn_cards.append(card)
             else:
-                print(f"{self.name}'s deck is empty! Cannot draw more cards.")
-                break
-        if drawn_cards:
-            print(f"{self.name} drew: {[str(c) for c in drawn_cards]}")
-        return drawn_cards
-    
-    def show_field(self, circle):
-        if self.vangaurd_circle:
-            print(f"{self.name}'s field: {[str(card) for card in circle]}")
-        else:
-            print(f"{self.name}'s field is empty.")
+                if player.playmat.zones[zone_map.get(zone_name)] == None:
+                    player.playmat.zones[zone_map.get(zone_name)] = player.playmat.zones[zone_name]
+                    player.playmat.zones[zone_name] = unit
+                    print(f"Called {unit.name} to {zone_name} and move {zone_map.get(zone_name)} to the rear gaurd!")
+                else: 
+                    
+                    current_unit =  player.playmat.zones[zone_name]
+                    player.playmat.drop_zone.append(current_unit)
+                    player.playmat.zones[zone_name] = unit
+                    print(f"Called {unit.name} to {zone_name}!")
 
-    def shuffle_cards(self, cards):
-        shuffled_cards = random.shuffle(cards)
-        return shuffled_cards 
-    
+                    print(f"Called {current_unit} to Drop zone!")
+
+            player.playmat.hand.remove(unit)
+
+    def show_board(self):
+        self.playmat.display(self)
+
     def is_defeated(self):
-        return len(self.damage_zone) >= 6 or len(self.deck) <= 0
-    
-    def show_playmat(self):
-        """Playmat"""
-
-        print(f"""
-
-        \t\t[{self.get_card_info("name", self.play_area[0])}] \t[{self.get_card_info("name", self.play_area[1])}] \t[{self.get_card_info("name", self.play_area[2])}] \t[Deck]
-        \t\tcount:{self.card_count(self.play_area[0])}  \tv_count:{self.card_count(self.play_area[1])} \tcount:{self.card_count(self.play_area[2])}  \tcount: {self.card_count(self.deck)}
-
-        \t[Damage Zone]\t[{self.get_card_info("name", self.play_area[3])}] \t[{self.get_card_info("name", self.play_area[4])}] \t[{self.get_card_info("name", self.play_area[5])}]\t[Drop Zone]
-        count:{self.card_count(self.damage_zone)}\tcount:{self.card_count(self.play_area[3])} count:{self.card_count(self.play_area[4])} count:{self.card_count(self.play_area[5])} \tcount:{self.card_count(self.drop_zone)}
-
-        [{self.show_hand()}]
-        h_count: {self.card_count(self.show_hand())}
-        """)
+        return len(self.playmat.damage_zone) >= 6 or len(self.deck.cards) == 0
